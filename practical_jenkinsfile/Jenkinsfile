@@ -1,21 +1,21 @@
 pipeline{
-    agents any
+    agent any
     parameters{
-        choice{
-            name: "ENVIRONMENT"
-            choices: ["DEV","PROD","TEST"]
+        choice(
+            name: "ENVIRONMENT",
+            choices: ["DEV","PROD","TEST"],
             description: "Choose deployment environment"
-        }
+        )
     }
     environment{
-        APP_NAME="Jenkins=practical"
-        VERSION: 1.0
+        APP_NAME="Jenkins-practical"
+        VERSION="1.0"
     }
     stages{
         stage('Repo Info'){
             steps{
-                echo "$APP_NAME"
-                echo "$VERSION"
+                echo "Application: ${APP_NAME}"
+                echo "Version: ${VERSION}"
                 echo "Environments ${params.ENVIRONMENT}"
             }
         }
