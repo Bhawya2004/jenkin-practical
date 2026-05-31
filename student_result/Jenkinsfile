@@ -31,6 +31,13 @@ pipeline{
                 }
             }
         }
+        stage('Docker Build'){
+            steps{
+                dir('student_result'){
+                    sh 'docker build -t student_app:v1'
+                }
+            }
+        }
     }
     post{
         success{
