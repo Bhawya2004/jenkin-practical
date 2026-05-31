@@ -12,23 +12,29 @@ pipeline{
         }
         stage('Build'){
             steps{
-                sh 'mvn compile'
+                dir('student_result'){
+                    sh 'mvn compile'
+                }
             }
         }
         stage('Test'){
             steps{
-                sh 'mvn test'
+                dir('student_result'){
+                    sh 'mvn test'
+                }
             }
         }
         stage('Store jar file'){
             steps{
-                sh 'mvn package'
+                dir('student_result'){
+                    sh 'mvn package'
+                }
             }
         }
     }
     post{
         success{
-            archiveArtifacts artifacts:'target/*.jar'
+            archiveArtifacts artifacts:'student_result/target/*.jar'
             echo "build sucessfull"
         }
         failure{
