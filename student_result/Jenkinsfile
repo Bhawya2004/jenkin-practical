@@ -6,7 +6,9 @@ pipeline{
     }
     stages{
         stage('checkout'){
-            checkout scm
+            steps{
+                checkout scm
+            }
         }
         stage('Build'){
             steps{
@@ -23,14 +25,14 @@ pipeline{
                 sh 'mvn package'
             }
         }
-        post{
-            success{
-                archiveArtifacts artifacts:'target/*.jar'
-                echo "build sucessfull"
-            }
-            failure{
-                echo "build failed"
-            }
+    }
+    post{
+        success{
+            archiveArtifacts artifacts:'target/*.jar'
+            echo "build sucessfull"
+        }
+        failure{
+           echo "build failed"
         }
     }
 }
