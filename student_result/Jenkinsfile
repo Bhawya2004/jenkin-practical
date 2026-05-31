@@ -1,51 +1,69 @@
-pipeline{
+pipeline {
     agent any
-    tools{
+    tools {
         jdk 'Java'
         maven 'Maven-3.9'
     }
-    stages{
-        stage('checkout'){
-            steps{
+    stages {
+        stage('Checkout') {
+            steps {
                 checkout scm
             }
         }
-        stage('Build'){
-            steps{
-                dir('student_result'){
+        stage('Build') {
+            steps {
+                dir('student_result') {
                     sh 'mvn compile'
                 }
             }
         }
-        stage('Test'){
-            steps{
-                dir('student_result'){
+        stage('Test') {
+            steps {
+                dir('student_result') {
                     sh 'mvn test'
                 }
             }
         }
-        stage('Store jar file'){
-            steps{
-                dir('student_result'){
+        stage('Package') {
+            steps {
+                dir('student_result') {
                     sh 'mvn package'
                 }
             }
         }
-        stage('Docker Build'){
-            steps{
-                dir('student_result'){
-                    sh 'docker build -t student_app:v1 .'
+        stage('Docker Build') {
+            steps {
+                dir('student_result') {
+                    sh 'docker build -t bhawya2004/student_app:v1 .'
                 }
             }
         }
-    }
-    post{
-        success{
-            archiveArtifacts artifacts:'student_result/target/*.jar'
-            echo "build sucessfull"
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
         }
-        failure{
-           echo "build failed"
+        stage('Docker Push') {
+            steps {
+                sh 'docker push bhawya2004/student_app:v1'
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'student_result/target/*.jar'
+            echo 'Build successful'
+        }
+        failure {
+            echo 'Build failed'
         }
     }
 }
