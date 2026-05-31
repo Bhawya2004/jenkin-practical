@@ -1,0 +1,36 @@
+pipeline{
+    agents any
+    parameters{
+        choice{
+            name: "ENVIRONMENT"
+            choices: ["DEV","PROD","TEST"]
+            description: "Choose deployment environment"
+        }
+    }
+    environment{
+        APP_NAME="Jenkins=practical"
+        VERSION: 1.0
+    }
+    stages{
+        stage('Repo Info'){
+            steps{
+                echo "$APP_NAME"
+                echo "$VERSION"
+                echo "Environments ${params.ENVIRONMENT}"
+            }
+        }
+        stage('List files'){
+            steps{
+                sh 'ls -la'
+            }
+        }
+    }
+    post{
+        success{
+            echo "Pipeline created successfully"
+        }
+        failure{
+            echo "Pipeline failed"
+        }
+    }
+}
