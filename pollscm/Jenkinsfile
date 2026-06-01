@@ -8,7 +8,9 @@ pipeline{
         }
         stage('Build python script'){
             steps{
-                sh 'python3 app.py'
+                dir('pollscm'){
+                    sh 'python3 app.py'
+                }
             }
         }
     }
