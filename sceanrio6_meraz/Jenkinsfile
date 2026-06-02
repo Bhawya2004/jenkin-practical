@@ -1,0 +1,49 @@
+pipeline{
+    agents any
+    environment{
+        APP_NAME: "DemoApp"
+        VERSION: 1.0
+    }
+    parameter{
+        choice(
+            name: 'ENV'
+            choice: ['PROD','TEST','DEV']
+            description: "chose the environment"
+        )
+    }
+    stages{
+        stage('checkout scm'){
+            steps{
+                checkout scm
+            }
+        }
+        stage('Profile Info'){
+            steps{
+                echo "Application: ${APP_NAME}"
+                echo "Version: ${VERSION}"
+                echo "ENVIRONMENT: ${params.ENV}"
+            }
+        }
+        stage('Testing'){
+            steps{
+                sh 'python3 sceanrio6_meraz/test.py'
+            }
+        }
+        stage('Apllication'){
+            steps{
+                sh 'python3 sceanrio6_meraz/app.py'
+            }
+        }
+    }
+    post{
+        success{
+            echo "build/test sucessfull"
+        }
+        failure{
+            echo "build/test failed"
+        }
+        always{
+            echo "pipeline finished"
+        }
+    }
+}
