@@ -1,8 +1,8 @@
 pipeline{
-    agents any
+    agent any
     environment{
-        APP_NAME: "DemoApp"
-        VERSION: 1.0
+        APP_NAME= "DemoApp"
+        VERSION= "1.0"
     }
     parameter{
         choice(
